@@ -7,25 +7,28 @@ URL = 'https://min-api.cryptocompare.com/data/price?fsym=DOGE&tsyms=INR'
 def getDogePrice():
     response = requests.request('GET', URL)
     response = json.loads(response.text)
-    f = open(r'C:\Users\Mittu\Desktop\DogeAlert\previous_value.txt', 'r')
+    f = open(r'C:\Users\Mittu\Desktop\DogeAlert\value_change.txt', 'r')
     previous_value  = f.read()
-    if response['INR'] >= float(previous_value) + 1:
-        msg = '\nThe price of DogeCoin has increased by {} rupees!\nPrevious value : {}\nCurrent value : {}'.format(round(response['INR'] - float(previous_value), 2), previous_value, response['INR'])
+    if response['INR'] >= float(previous_value) + 3:
+        msg = '\nThe price of DogeCoin changed by {} rupees!\nPrevious value : {}\nCurrent value : {}'.format(round(response['INR'] - float(previous_value), 2), previous_value, response['INR'])
         print(msg)
         sendEmail(previous_value, float(response['INR']), msg)
         sendTelegramMessage(msg)
-    elif response['INR'] <= float(previous_value) - 1:
-        msg = '\nThe price of DogeCoin has decreased by {} rupees!\nPrevious value : {}\nCurrent value : {}'.format(round(float(previous_value) - response['INR'], 2), previous_value, response['INR'])
+        f = open(r'C:\Users\Mittu\Desktop\DogeAlert\value_change.txt', 'w')
+        f.write(str(response['INR']))
+        f.close()    
+    elif response['INR'] <= float(previous_value) - 3:
+        msg = '\nThe price of DogeCoin changed by {} rupees!\nPrevious value : {}\nCurrent value : {}'.format(round(float(previous_value) - response['INR'], 2), previous_value, response['INR'])
         print(msg)
         sendEmail(previous_value, float(response['INR']), msg)
         sendTelegramMessage(msg)
+        f = open(r'C:\Users\Mittu\Desktop\DogeAlert\value_change.txt', 'w')
+        f.write(str(response['INR']))
+        f.close()
     else:
         msg = 'DogeCoin stable!\nPrevious value : {}\nCurrent value : {}'.format(previous_value, response['INR'])
         print(msg)
         #sendTelegramMessage(msg)
-    f = open(r'C:\Users\Mittu\Desktop\DogeAlert\previous_value.txt', 'w')
-    f.write(str(response['INR']))
-    f.close()
 
 def sendEmail(previous_value, current_value, msg):
     TO = ['vikhyath456@gmail.com']
