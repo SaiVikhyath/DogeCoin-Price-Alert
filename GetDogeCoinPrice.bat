@@ -1,1 +1,0 @@
-start "" "C:\Users\Mittu\AppData\Local\Programs\Python\Python37\Python.exe" "C:\Users\Mittu\Desktop\DogeAlert\GetDogeCoinPrice.py"
